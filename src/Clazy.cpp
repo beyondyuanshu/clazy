@@ -373,5 +373,21 @@ void ClazyASTAction::PrintHelp(llvm::raw_ostream &ros, HelpMode helpMode)
     ros << "FixIts are experimental and rewrite your code therefore only one FixIt is allowed per build.\nSpecifying a list of different FixIts is not supported.\nBackup your code before running them.\n";
 }
 
+unique_ptr<ASTConsumer> ClazyStandaloneASTAction::CreateASTConsumer(CompilerInstance &ci, llvm::StringRef)
+{
+    auto context = new ClazyContext(ci);
+    auto astConsumer = new ClazyASTConsumer(context);
+
+    auto cm = CheckManager::instance();
+    RegisteredCheck::List requestedChecks = cm->requestedChecksThroughEnv();
+
+    CheckBase::List createdChecks = cm->createChecks(requestedChecks, context);
+    for (CheckBase *check : createdChecks) {
+        astConsumer->addCheck(check);
+    }
+
+   return unique_ptr<ASTConsumer>(astConsumer);
+}
+
 static FrontendPluginRegistry::Add<ClazyASTAction>
 X("clang-lazy", "clang lazy plugin");

@@ -39,6 +39,9 @@ namespace clang {
     class CompilerInstance;
 }
 
+/**
+ * This is the FrontendAction that is run with clazy is used as a plugin.
+ */
 class ClazyASTAction : public clang::PluginASTAction
 {
 public:
@@ -61,6 +64,19 @@ private:
     CheckManager *const m_checkManager;
 };
 
+/**
+ * This is the FrontendAction that is run with clazy is used standalone instead of as a plugin.
+ * i.e: when you run clazy-standalone, this is the invoked FrontendAction
+ */
+class ClazyStandaloneASTAction : public clang::ASTFrontendAction
+{
+protected:
+    std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(clang::CompilerInstance &ci, llvm::StringRef) override;
+};
+
+/**
+ * Clazy's AST Consumer.
+ */
 class ClazyASTConsumer : public clang::ASTConsumer,
                          public clang::RecursiveASTVisitor<ClazyASTConsumer>
 {
