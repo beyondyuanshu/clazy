@@ -157,6 +157,12 @@ RegisteredCheck::List CheckManager::availableChecks(CheckLevel maxLevel) const
     return checks;
 }
 
+RegisteredCheck::List CheckManager::requestedChecksThroughEnv() const
+{
+    vector<string> dummy;
+    return requestedChecksThroughEnv(dummy);
+}
+
 RegisteredCheck::List CheckManager::requestedChecksThroughEnv(vector<string> &userDisabledChecks) const
 {
     static RegisteredCheck::List requestedChecksThroughEnv;
