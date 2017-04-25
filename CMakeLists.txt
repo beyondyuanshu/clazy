@@ -224,3 +224,10 @@ if (CLAZY_BUILD_UTILS_LIB)
   )
   install(FILES ${CLAZY_LIB_INCLUDES} DESTINATION include/clazy)
 endif()
+
+
+# Build clazy-standalone
+add_executable(clazy-standalone src/ClazyStandaloneMain.cpp)
+link_to_llvm(clazy-standalone)
+target_link_libraries(clazy-standalone ClangLazy)
+install(FILES ${CMAKE_BINARY_DIR}/bin/clazy-standalone DESTINATION bin PERMISSIONS OWNER_WRITE OWNER_EXECUTE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_READ WORLD_EXECUTE)
